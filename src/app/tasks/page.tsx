@@ -1,5 +1,5 @@
-import { getTasks } from '@/lib/api';
-import { CheckSquare, Plus } from 'lucide-react';
+import { getTasks, getEvents } from '@/lib/api';
+import { CheckSquare, Plus, Calendar } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { CreateTaskModal } from '@/components/features/CreateTaskModal';
@@ -15,7 +15,9 @@ interface Props {
 export default async function TasksPage({ searchParams }: Props) {
   const resolvedParams = await searchParams;
   const filter = resolvedParams.filter || 'all';
-  let tasks = await getTasks();
+  const [allTasks, events] = await Promise.all([getTasks(), getEvents()]);
+  const eventMap = new Map(events.map(e => [e.id, e.title]));
+  let tasks = allTasks;
 
   if (filter === 'overdue') {
     tasks = tasks.filter(t => t.isOverdue);
@@ -62,7 +64,14 @@ export default async function TasksPage({ searchParams }: Props) {
               <div key={task.id} className="grid grid-cols-12 gap-4 p-4 border-b-2 border-foreground last:border-b-0 hover:bg-muted/50 transition-colors items-center">
                 <div className="col-span-5 flex flex-col">
                   <span className="font-bold">{task.taskName || 'Untitled Task'}</span>
-                  <span className="text-xs text-muted-foreground font-mono">Priority: {task.priority}</span>
+                  <div className="flex gap-2 items-center mt-1">
+                    <span className="text-[10px] text-muted-foreground font-mono bg-muted px-1.5 py-0.5 border border-foreground/20 uppercase">Priority: {task.priority}</span>
+                    {task.relatedEventId && eventMap.has(task.relatedEventId) && (
+                      <span className="text-[10px] text-primary font-bold uppercase tracking-widest flex items-center gap-1 bg-primary/10 px-1.5 py-0.5 border border-primary/20">
+                        <Calendar className="w-3 h-3" /> {eventMap.get(task.relatedEventId)}
+                      </span>
+                    )}
+                  </div>
                 </div>
                 <div className="col-span-2 text-sm">{task.ownerName || 'Unassigned'}</div>
                 <div className="col-span-2 text-sm font-mono font-bold">
