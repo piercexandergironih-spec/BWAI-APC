@@ -121,6 +121,24 @@ async function seed() {
     'Related Event': { relation: [{ id: event2Id }] }
   });
 
+  await createPage(NOTES_DB_ID, {
+    'Title': { title: richText('Sponsorship Pitch Meeting') },
+    'Notes': { rich_text: richText('Met with the tech companies to discuss sponsoring the Annual AI Summit. They are interested in setting up a booth in the main hall. We need to send them the floor plan and the pricing tiers.') },
+    'Action Items': { rich_text: richText('- Alice: Send pricing deck\n- Charlie: Draft contract') },
+    'Author Name': { rich_text: richText('Alice Johnson') },
+    'Date': { date: { start: today.toISOString().split('T')[0] } },
+    'Related Event': { relation: [{ id: event1Id }] }
+  });
+
+  await createPage(NOTES_DB_ID, {
+    'Title': { title: richText('Venue Walkthrough') },
+    'Notes': { rich_text: richText('Toured the main auditorium for the AI Summit. Space is excellent, acoustics are great. We noted that the power outlets near the back rows are limited, so we might need extension cords for attendees with laptops.') },
+    'Action Items': { rich_text: richText('- Charlie: Source 15 extension cables\n- Alice: Update logistics doc') },
+    'Author Name': { rich_text: richText('Charlie Davis') },
+    'Date': { date: { start: today.toISOString().split('T')[0] } },
+    'Related Event': { relation: [{ id: event1Id }] }
+  });
+
   console.log('Seed complete! Your Notion databases are now populated with sample data.');
 }
 

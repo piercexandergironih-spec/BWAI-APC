@@ -5,7 +5,7 @@ import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, Dialog
 import { FileText, Calendar, User, X } from 'lucide-react';
 import type { MeetingNote } from '@/types';
 
-export function NoteDetailModal({ note, children }: { note: MeetingNote, children: React.ReactNode }) {
+export function NoteDetailModal({ note, eventTitle, children }: { note: MeetingNote, eventTitle?: string, children: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -24,6 +24,11 @@ export function NoteDetailModal({ note, children }: { note: MeetingNote, childre
                 <User className="w-4 h-4" />
                 <span>{note.authorName || 'Unknown'}</span>
               </div>
+              {eventTitle && (
+                <div className="flex items-center gap-1 text-sm font-bold text-primary bg-primary/10 px-2 py-1 border border-primary/20 rounded-none uppercase tracking-widest">
+                  <span>EVENT: {eventTitle}</span>
+                </div>
+              )}
             </div>
           </DialogHeader>
           <DialogClose render={

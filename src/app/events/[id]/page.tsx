@@ -1,13 +1,15 @@
-import { getEvent, getTasks } from '@/lib/api';
+import { getEvent, getTasks, getNotes } from '@/lib/api';
 import { notFound } from 'next/navigation';
 import { PageHeader } from '@/components/layout/PageHeader';
-import { Calendar } from 'lucide-react';
+import { Calendar, FileText, Plus } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { TaskStatusSelect } from '@/components/features/TaskStatusSelect';
 import { EditEventModal } from '@/components/features/EditEventModal';
 import { CreateTaskModal } from '@/components/features/CreateTaskModal';
 import { AiTaskSuggesterModal } from '@/components/features/AiTaskSuggesterModal';
 import { EditTaskModal } from '@/components/features/EditTaskModal';
+import { NoteDetailModal } from '@/components/features/NoteDetailModal';
+import Link from 'next/link';
 
 interface Props {
   params: { id: string };
@@ -19,9 +21,10 @@ export default async function EventDetailPage({ params, searchParams }: Props) {
   const resolvedSearchParams = await searchParams;
   const autoOpenTaskModal = resolvedSearchParams.newTask === 'true';
   const autoOpenAiModal = resolvedSearchParams.suggestTasks === 'true';
-  const [event, allTasks] = await Promise.all([
+  const [event, allTasks, allNotes] = await Promise.all([
     getEvent(resolvedParams.id),
-    getTasks()
+    getTasks(),
+    getNotes()
   ]);
 
   if (!event) {
@@ -29,6 +32,7 @@ export default async function EventDetailPage({ params, searchParams }: Props) {
   }
 
   const relatedTasks = allTasks.filter(t => t.relatedEventId === event.id);
+  const relatedNotes = allNotes.filter(n => n.relatedEventId === event.id);
 
   return (
     <div className="flex flex-col gap-8">
@@ -100,6 +104,46 @@ export default async function EventDetailPage({ params, searchParams }: Props) {
                       <EditTaskModal task={task} />
                     </div>
                   </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Related Notes */}
+          <div className="brutalist-card p-6 bg-card text-card-foreground">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="font-bold uppercase tracking-widest text-muted-foreground text-sm">Meeting Notes</h3>
+              <Link href="/notes" className="text-xs font-bold uppercase tracking-widest border-2 border-foreground px-3 py-1.5 hover:bg-muted transition-colors flex items-center gap-1">
+                <Plus className="w-3 h-3" /> Note
+              </Link>
+            </div>
+            
+            {relatedNotes.length === 0 ? (
+              <div className="p-8 text-center text-muted-foreground font-mono bg-muted/50 border-2 border-foreground border-dashed">
+                No meeting notes for this event yet.
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {relatedNotes.map(note => (
+                  <NoteDetailModal key={note.id} note={note} eventTitle={event.title}>
+                    <div className="border-2 border-foreground p-4 flex flex-col gap-3 group hover:-translate-y-1 transition-transform cursor-pointer bg-background">
+                      <div className="flex justify-between items-start">
+                        <h4 className="font-bold group-hover:text-primary transition-colors line-clamp-1 flex-1">{note.title || 'Untitled'}</h4>
+                        <FileText className="w-4 h-4 text-muted-foreground shrink-0 ml-2" />
+                      </div>
+                      <div className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
+                        {note.notes || 'No content...'}
+                      </div>
+                      <div className="flex justify-between items-center mt-auto pt-2">
+                        <span className="text-[10px] font-mono font-bold bg-muted px-2 py-0.5 border border-foreground/20">
+                          {note.date || 'No Date'}
+                        </span>
+                        <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+                          {note.authorName}
+                        </span>
+                      </div>
+                    </div>
+                  </NoteDetailModal>
                 ))}
               </div>
             )}
