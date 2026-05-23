@@ -1,5 +1,7 @@
 # BWAI-APC
 
+Deployment link: https://bwai-apc.vercel.app/dashboard
+
 ## Student Organization Operations MVP
 
 A lightweight MVP app for student organizations to track events, tasks, deadlines, meeting notes, and operational updates using Notion as the database.
