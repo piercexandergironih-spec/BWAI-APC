@@ -31,8 +31,8 @@ export default async function NotesPage() {
             const eventTitle = note.relatedEventId ? eventMap.get(note.relatedEventId) : undefined;
             return (
               <NoteDetailModal key={note.id} note={note} eventTitle={eventTitle}>
-                <div className="brutalist-card p-6 flex flex-col gap-4 group hover:-translate-y-1 transition-transform cursor-pointer text-left h-full">
-                  <div className="flex justify-between items-center border-b-2 border-foreground pb-4">
+                <button type="button" className="brutalist-card p-6 flex flex-col gap-4 group hover:-translate-y-1 transition-transform cursor-pointer text-left h-full w-full">
+                  <div className="flex justify-between items-center border-b-2 border-foreground pb-4 w-full">
                     <span className="text-xs font-mono font-bold bg-muted px-2 py-1 border border-foreground">
                       {note.date || 'No Date'}
                     </span>
@@ -41,7 +41,7 @@ export default async function NotesPage() {
                     </span>
                   </div>
                   
-                  <div className="flex flex-col gap-2">
+                  <div className="flex flex-col gap-2 w-full">
                     {eventTitle && (
                       <div className="text-[10px] font-bold uppercase tracking-widest text-primary flex items-center gap-1">
                         <CalendarIcon className="w-3 h-3" /> {eventTitle}
@@ -52,10 +52,10 @@ export default async function NotesPage() {
                     </h3>
                   </div>
                   
-                  <div className="mt-2 text-sm text-muted-foreground line-clamp-3">
+                  <div className="mt-2 text-sm text-muted-foreground line-clamp-3 w-full">
                     {note.notes || 'No notes content provided.'}
                   </div>
-                </div>
+                </button>
               </NoteDetailModal>
             );
           })

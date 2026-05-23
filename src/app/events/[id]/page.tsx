@@ -126,15 +126,15 @@ export default async function EventDetailPage({ params, searchParams }: Props) {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {relatedNotes.map(note => (
                   <NoteDetailModal key={note.id} note={note} eventTitle={event.title}>
-                    <div className="border-2 border-foreground p-4 flex flex-col gap-3 group hover:-translate-y-1 transition-transform cursor-pointer bg-background">
-                      <div className="flex justify-between items-start">
+                    <button type="button" className="border-2 border-foreground p-4 flex flex-col gap-3 group hover:-translate-y-1 transition-transform cursor-pointer bg-background text-left w-full">
+                      <div className="flex justify-between items-start w-full">
                         <h4 className="font-bold group-hover:text-primary transition-colors line-clamp-1 flex-1">{note.title || 'Untitled'}</h4>
                         <FileText className="w-4 h-4 text-muted-foreground shrink-0 ml-2" />
                       </div>
-                      <div className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
+                      <div className="text-xs text-muted-foreground line-clamp-2 leading-relaxed w-full">
                         {note.notes || 'No content...'}
                       </div>
-                      <div className="flex justify-between items-center mt-auto pt-2">
+                      <div className="flex justify-between items-center mt-auto pt-2 w-full">
                         <span className="text-[10px] font-mono font-bold bg-muted px-2 py-0.5 border border-foreground/20">
                           {note.date || 'No Date'}
                         </span>
@@ -142,7 +142,7 @@ export default async function EventDetailPage({ params, searchParams }: Props) {
                           {note.authorName}
                         </span>
                       </div>
-                    </div>
+                    </button>
                   </NoteDetailModal>
                 ))}
               </div>
