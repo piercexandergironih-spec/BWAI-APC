@@ -2,6 +2,7 @@ import { getNotes } from '@/lib/api';
 import { FileText, Plus } from 'lucide-react';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { CreateNoteModal } from '@/components/features/CreateNoteModal';
+import { NoteDetailModal } from '@/components/features/NoteDetailModal';
 
 export default async function NotesPage() {
   const notes = await getNotes();
@@ -25,26 +26,28 @@ export default async function NotesPage() {
           </div>
         ) : (
           notes.map(note => (
-            <div key={note.id} className="brutalist-card p-6 flex flex-col gap-4 group hover:-translate-y-1 transition-transform cursor-pointer">
-              <div className="flex justify-between items-center border-b-2 border-foreground pb-4">
-                <span className="text-xs font-mono font-bold bg-muted px-2 py-1 border border-foreground">
-                  {note.date || 'No Date'}
-                </span>
-                <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
-                  {note.authorName || 'Unknown'}
-                </span>
+            <NoteDetailModal key={note.id} note={note}>
+              <div className="brutalist-card p-6 flex flex-col gap-4 group hover:-translate-y-1 transition-transform cursor-pointer text-left">
+                <div className="flex justify-between items-center border-b-2 border-foreground pb-4">
+                  <span className="text-xs font-mono font-bold bg-muted px-2 py-1 border border-foreground">
+                    {note.date || 'No Date'}
+                  </span>
+                  <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
+                    {note.authorName || 'Unknown'}
+                  </span>
+                </div>
+                
+                <div>
+                  <h3 className="text-xl font-heading font-bold group-hover:text-primary transition-colors">
+                    {note.title || 'Untitled Note'}
+                  </h3>
+                </div>
+                
+                <div className="mt-2 text-sm text-muted-foreground line-clamp-3">
+                  {note.notes || 'No notes content provided.'}
+                </div>
               </div>
-              
-              <div>
-                <h3 className="text-xl font-heading font-bold group-hover:text-primary transition-colors">
-                  {note.title || 'Untitled Note'}
-                </h3>
-              </div>
-              
-              <div className="mt-2 text-sm text-muted-foreground line-clamp-3">
-                {note.notes || 'No notes content provided.'}
-              </div>
-            </div>
+            </NoteDetailModal>
           ))
         )}
       </div>
